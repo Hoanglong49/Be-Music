@@ -2,7 +2,7 @@ export const PORT = 8080
 
 export const DB = {
   DB_NAME: 'MUSIC_DB',
-  PORT: 3308,
+  PORT: 3306,
   USER: 'root',
   PASS: '',
   HOST: 'localhost'
