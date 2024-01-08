@@ -1,9 +1,9 @@
 import { Album } from '~/album/album.model'
 import { Comment } from '~/comment/comments.model'
-import sequelize from '~/config/db'
 import { Favorite } from '~/favorite/favorite.model'
 import { History } from '~/history/history.model'
 import { Media } from '~/media/media.model'
+import { MediaType } from '~/mediaType/mediaType.model'
 import PlayList from '~/playlist/playlist.model'
 import { PlayListAndMusic } from '~/playlistAndMusics/playlistAndMusics.model'
 import { Role } from '~/role/role.model'
@@ -31,7 +31,7 @@ Media.belongsTo(Album, { foreignKey: 'albumId', targetKey: 'id', as: 'album' })
 Album.hasMany(Media, { foreignKey: 'albumId', as: 'medias' })
 
 // favorite and user
-Favorite.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' })
+Favorite.belongsTo(User, { foreignKey: 'userId', as: 'user' })
 User.hasMany(Favorite, { foreignKey: 'userId' })
 
 //favorite and media
@@ -43,6 +43,7 @@ User.hasMany(History, { foreignKey: 'userId' })
 
 //media and author
 Media.belongsTo(User, { foreignKey: 'authorId', targetKey: 'id', as: 'author' })
+User.hasMany(Media, { foreignKey: 'authorId', as: 'medias' })
 
 //History and media
 History.belongsTo(Media, { foreignKey: 'mediaId', targetKey: 'id', as: 'media' })
@@ -54,18 +55,19 @@ Comment.belongsTo(User, { foreignKey: 'authorId', targetKey: 'id', as: 'author' 
 Comment.belongsTo(Media, { foreignKey: 'mediaId', targetKey: 'id' })
 Media.hasMany(Comment, { foreignKey: 'mediaId' })
 
-export const seedModel = async () => {
-  await sequelize.sync({})
+//media type and media
+MediaType.hasMany(Media, { foreignKey: 'mediaTypeId', as: 'medias' })
+Media.belongsTo(MediaType, { foreignKey: 'mediaTypeId', as: 'mediaType' })
 
+export const seedModel = async () => {
   // await Promise.all([
   //   Role.create({ code: ERole.ADMIN }),
   //   Role.create({ code: ERole.SINGER }),
   //   Role.create({ code: ERole.USER })
   // ])
-
   // await Promise.all(dataSeeds.map((data) => User.create(data)))
 }
 
 seedModel().catch(console.log)
 
-export { Album, Comment, History, Media, PlayList, PlayListAndMusic, Role, User }
+export { Album, Comment, History, Media, MediaType, PlayList, PlayListAndMusic, Role, User }
