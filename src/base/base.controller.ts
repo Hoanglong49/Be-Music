@@ -1,15 +1,16 @@
 import { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { BaseService } from './base.service'
+import { autoBind } from '~/utils'
 
 export class BaseController<S extends BaseService> {
   constructor(service: S) {
+    this.service = service
     this.getAll = this.getAll.bind(this)
     this.create = this.create.bind(this)
     this.update = this.update.bind(this)
     this.remove = this.remove.bind(this)
-
-    this.service = service
+    autoBind(this)
     console.log(`${this.service.tableName} will be inject to controller`)
   }
 
